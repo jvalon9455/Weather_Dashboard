@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 var APIKey = "2585be6037c996f63abad19c6e9a36ea";
 var url = "https://api.openweathermap.org/data/2.5/weather?q="
+var fiveDayUrl = "https://api.openweathermap.org/data/2.5/onecall?units=imperial&lat="
 //var currentWeatherDiv = $("#Current_Weather");
 var cityName = $("#Name");
 var currentTemp = $("#Current-Temp");
@@ -23,19 +24,40 @@ $("#SearchCity").on("click", function () {
         method: "GET",
         //dataType: "text",
         success: function (result) {
-            console.log(result);
+            //console.log(result);
             cityName.text(result.name);
             currentTemp.text("Temp: " + result.main.temp);
             humidityEl.text("Humidity: " + result.main.humidity + "%");
             windSpeed.text("Wind-Speed: " + result.wind.speed);
+            var lat = JSON.stringify(result.coord.lat);
+            var long = JSON.stringify(result.coord.lon);
+            $.ajax({
+                url: fiveDayUrl + lat + '&lon=' + long + '&exclude=current,minutely,hourly&appid=' + APIKey,
+                method: 'GET',
+                success: function (result) {
+                    console.log(result);
+                    var importantStuff = result.daily;
+                    for(var i = 0; i < (importantStuff.length - 2); i++){
+                        console.log(importantStuff[i]);
+                    }
+                }
+            });
 
         }
     });
 
 
 
+
 });
 
+/*function popFiveDayForecast(fiveDay) {
+    // for loop to make cards for five day forecast
+    for (var i = 0; i < 5; i++) {
+        console.log(fiveDay.daily);
+    }
+
+}*/
 
 // ## Acceptance Criteria
 

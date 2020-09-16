@@ -17,16 +17,15 @@ var date = new Date();
 
 
 $("#SearchCity").on("click", function () {
-    console.log("It worked");
+    // console.log("It worked");
     var city = $("#SearchBar").val();
     $.ajax({
         url: url + city + '&appid=' + APIKey,
-        method: "GET",
-       
+        method: "GET",  
         success: function (result) {
-            console.log(result);
+            // console.log(result);
             cityName.text(result.name + " (" + date.toDateString() + ")");
-            currentTemp.text("Temp: " + result.main.temp);
+            currentTemp.text ("Temp: " + kelvinConversion(result.main.temp));
             humidityEl.text("Humidity: " + result.main.humidity + "%");
             windSpeed.text("Wind-Speed: " + result.wind.speed);
             var lat = JSON.stringify(result.coord.lat);
@@ -62,7 +61,7 @@ $("#SearchCity").on("click", function () {
 });
 // change kelvin to farenheight
 function kelvinConversion (K){
-    return Math.floor((K - 273.15) *1.8 + 32);
+    return Math.floor ((K - 273.15) *1.8 + 32);
 }
 console.log(kelvinConversion)
 

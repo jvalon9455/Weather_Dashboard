@@ -36,9 +36,18 @@ $("#SearchCity").on("click", function () {
                 method: 'GET',
                 success: function (result) {
                     console.log(result);
+
+                    // create 5 day forecast columns to populate and show future weather conditions
                     var importantStuff = result.daily;
                     for(var i = 0; i < (importantStuff.length - 2); i++){
-                        console.log(importantStuff[i]);
+                        var typeLessStuff = importantStuff[i];
+                        var forcastCol = $("<div>");
+                        forcastCol.addClass("col forecast bg-primary text-white ml-3 mb-3 rounded");
+                        forcastCol.append($("<img src=" + '"https://openweathermap.org/img/wn/' + typeLessStuff.weather[0].icon + '@2x.png"' + ">"));
+                        forcastCol.append($("<p>Temperature: " + typeLessStuff.temp.day + "</p>"));
+                        forcastCol.append($("<p>Humidity: " + typeLessStuff.humidity + "%</p>"));
+
+                        fiveDayForecast.append(forcastCol);
                     }
                 }
             });

@@ -14,6 +14,7 @@ var humidityEl = $("#Humidity");
 var windSpeed = $("#Wind-Speed");
 var uvIndex = $("#UV-index");
 var fiveDayForecast = $("#Five_Day_Forecast");
+var date = new Date();
 
 
 $("#SearchCity").on("click", function () {
@@ -24,8 +25,8 @@ $("#SearchCity").on("click", function () {
         method: "GET",
         //dataType: "text",
         success: function (result) {
-            //console.log(result);
-            cityName.text(result.name);
+            console.log(result);
+            cityName.text(result.name + " (" + date.toDateString() + ")");
             currentTemp.text("Temp: " + result.main.temp);
             humidityEl.text("Humidity: " + result.main.humidity + "%");
             windSpeed.text("Wind-Speed: " + result.wind.speed);
@@ -35,19 +36,20 @@ $("#SearchCity").on("click", function () {
                 url: fiveDayUrl + lat + '&lon=' + long + '&exclude=current,minutely,hourly&appid=' + APIKey,
                 method: 'GET',
                 success: function (result) {
-                    console.log(result);
-
+                    //console.log(result);
                     // create 5 day forecast columns to populate and show future weather conditions
-                    var importantStuff = result.daily;
-                    for(var i = 0; i < (importantStuff.length - 2); i++){
-                        var typeLessStuff = importantStuff[i];
-                        var forcastCol = $("<div>");
-                        forcastCol.addClass("col forecast bg-primary text-white ml-3 mb-3 rounded");
-                        forcastCol.append($("<img src=" + '"https://openweathermap.org/img/wn/' + typeLessStuff.weather[0].icon + '@2x.png"' + ">"));
-                        forcastCol.append($("<p>Temperature: " + typeLessStuff.temp.day + "</p>"));
-                        forcastCol.append($("<p>Humidity: " + typeLessStuff.humidity + "%</p>"));
+                    var weeklyResult = result.daily;
+                    for(var i = 0; i < (weeklyResult.length - 3); i++){
+                        date.setDate(date.getDate() + 1);
+                        var  fiveDayResult = weeklyResult[i];
+                        var forecastCol = $("<div>");
+                        forecastCol.addClass("col forecast bg-primary text-white ml-3 mb-3 rounded");
+                        forecastCol.text(date.toDateString());
+                        forecastCol.append($("<img src=" + '"https://openweathermap.org/img/wn/' + fiveDayResult.weather[0].icon + '@2x.png"' + ">"));
+                        forecastCol.append($("<p>Temperature: " + fiveDayResult.temp.day + "</p>"));
+                        forecastCol.append($("<p>Humidity: " + fiveDayResult.humidity + "%</p>"));
 
-                        fiveDayForecast.append(forcastCol);
+                        fiveDayForecast.append(forecastCol);
                     }
                 }
             });
@@ -59,7 +61,10 @@ $("#SearchCity").on("click", function () {
 
 
 });
-
+// change kelvin to farenheight
+function kelvinConversion (K){
+    return Math.floor((K - 273.15) *1.8 + 32);
+}
 /*function popFiveDayForecast(fiveDay) {
     // for loop to make cards for five day forecast
     for (var i = 0; i < 5; i++) {

@@ -7,7 +7,6 @@ $(document).ready(function () {
 var APIKey = "2585be6037c996f63abad19c6e9a36ea";
 var url = "https://api.openweathermap.org/data/2.5/weather?q="
 var fiveDayUrl = "https://api.openweathermap.org/data/2.5/onecall?units=imperial&lat="
-//var currentWeatherDiv = $("#Current_Weather");
 var cityName = $("#Name");
 var currentTemp = $("#Current-Temp");
 var humidityEl = $("#Humidity");
@@ -23,7 +22,7 @@ $("#SearchCity").on("click", function () {
     $.ajax({
         url: url + city + '&appid=' + APIKey,
         method: "GET",
-        //dataType: "text",
+       
         success: function (result) {
             console.log(result);
             cityName.text(result.name + " (" + date.toDateString() + ")");
@@ -36,7 +35,7 @@ $("#SearchCity").on("click", function () {
                 url: fiveDayUrl + lat + '&lon=' + long + '&exclude=current,minutely,hourly&appid=' + APIKey,
                 method: 'GET',
                 success: function (result) {
-                    //console.log(result);
+                  
                     // create 5 day forecast columns to populate and show future weather conditions
                     var weeklyResult = result.daily;
                     for(var i = 0; i < (weeklyResult.length - 3); i++){
@@ -46,7 +45,7 @@ $("#SearchCity").on("click", function () {
                         forecastCol.addClass("col forecast bg-primary text-white ml-3 mb-3 rounded");
                         forecastCol.text(date.toDateString());
                         forecastCol.append($("<img src=" + '"https://openweathermap.org/img/wn/' + fiveDayResult.weather[0].icon + '@2x.png"' + ">"));
-                        forecastCol.append($("<p>Temperature: " + fiveDayResult.temp.day + "</p>"));
+                        forecastCol.append($("<p>Temperature: " + fiveDayResult.temp.day + " F" + "</p>"));
                         forecastCol.append($("<p>Humidity: " + fiveDayResult.humidity + "%</p>"));
 
                         fiveDayForecast.append(forecastCol);
@@ -65,13 +64,8 @@ $("#SearchCity").on("click", function () {
 function kelvinConversion (K){
     return Math.floor((K - 273.15) *1.8 + 32);
 }
-/*function popFiveDayForecast(fiveDay) {
-    // for loop to make cards for five day forecast
-    for (var i = 0; i < 5; i++) {
-        console.log(fiveDay.daily);
-    }
+console.log(kelvinConversion)
 
-}*/
 
 // ## Acceptance Criteria
 
